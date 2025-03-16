@@ -5,7 +5,7 @@ interface LoginViewProps {
   onLogin: (portfolioId: string) => void;
 }
 
-const API_BASE_URL = 'production'  === 'production' 
+const API_BASE_URL = (true)
   ? 'https://antique-icy-finch.glitch.me' 
   : 'http://localhost:3001';
 

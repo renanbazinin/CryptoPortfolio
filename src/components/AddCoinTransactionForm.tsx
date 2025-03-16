@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const API_BASE_URL = 'production'=== 'production'
-  ? 'https://antique-icy-finch.glitch.me'
-  : 'http://localhost:3001';
+const API_BASE_URL = 'https://antique-icy-finch.glitch.me';
 
 interface AddCoinTransactionFormProps {
   portfolioId: string;
@@ -20,9 +18,9 @@ interface CoinInfo {
 const AddCoinTransactionForm: React.FC<AddCoinTransactionFormProps> = ({
   portfolioId,
   onSuccess,
-  onCancel
+  onCancel,
 }) => {
-  // Transaction states
+  // Transaction state variables
   const [coinId, setCoinId] = useState('');
   const [symbol, setSymbol] = useState('');
   const [name, setName] = useState('');
@@ -52,8 +50,8 @@ const AddCoinTransactionForm: React.FC<AddCoinTransactionFormProps> = ({
             order: 'market_cap_desc',
             per_page: 100,
             page: 1,
-            sparkline: false
-          }
+            sparkline: false,
+          },
         })
         .then(({ data }) => {
           setAllCoins(data);
@@ -66,14 +64,23 @@ const AddCoinTransactionForm: React.FC<AddCoinTransactionFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate coin selection
+    if (!coinId) {
+      alert('Please select a coin.');
+      return;
+    }
+
+    let endpoint = '';
+    if (portfolioId.length === 24 && /^[0-9a-fA-F]{24}$/.test(portfolioId)) {
+      endpoint = `${API_BASE_URL}/api/portfolio/${portfolioId}/coins/${coinId}/transactions`;
+    } else {
+      endpoint = `${API_BASE_URL}/api/portfolio/byUserId/${portfolioId}/coins/${coinId}/transactions`;
+    }
+    console.log(`Submitting transaction to: ${endpoint}`);
+    console.log(`Transaction details: date=${date}, type=${type}, shares=${shares}, costPerShare=${costPerShare}, commission=${commission}, note=${note}, symbol=${symbol}, name=${name}`);
+
     try {
-      // Determine the endpoint based on whether the portfolioId is a Mongo ObjectId or a custom userId.
-      let endpoint = '';
-      if (portfolioId.length === 24 && /^[0-9a-fA-F]{24}$/.test(portfolioId)) {
-        endpoint = `${API_BASE_URL}/api/portfolio/${portfolioId}/coins/${coinId}/transactions`;
-      } else {
-        endpoint = `${API_BASE_URL}/api/portfolio/byUserId/${portfolioId}/coins/${coinId}/transactions`;
-      }
       await axios.post(endpoint, {
         date,
         type,
@@ -82,7 +89,7 @@ const AddCoinTransactionForm: React.FC<AddCoinTransactionFormProps> = ({
         commission,
         note,
         symbol,
-        name
+        name,
       });
       onSuccess();
     } catch (error) {
@@ -103,7 +110,7 @@ const AddCoinTransactionForm: React.FC<AddCoinTransactionFormProps> = ({
         zIndex: 9998,
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
       }}
     >
       <div
@@ -114,7 +121,7 @@ const AddCoinTransactionForm: React.FC<AddCoinTransactionFormProps> = ({
           border: '2px solid #0d6efd',
           borderRadius: '8px',
           maxWidth: '400px',
-          width: '90%'
+          width: '90%',
         }}
       >
         <h3 style={{ textAlign: 'center' }}>Add Coin Transaction</h3>
@@ -130,6 +137,7 @@ const AddCoinTransactionForm: React.FC<AddCoinTransactionFormProps> = ({
                 if (selectedCoin) {
                   setSymbol(selectedCoin.symbol);
                   setName(selectedCoin.name);
+                  console.log(`Selected coin: ${selectedCoin.name} (${selectedCoin.symbol}), id: ${selectedCoin.id}`);
                 }
               }}
               style={{ padding: '8px', fontSize: '16px', width: '100%' }}
