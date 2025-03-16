@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+
+const API_BASE_URL = 'production' === 'production'
+  ? 'https://antique-icy-finch.glitch.me'
+  : 'http://localhost:3001';
+
 interface AddCryptoFormProps {
   portfolioId: string;
   onAddSuccess: () => void;
@@ -24,7 +29,7 @@ const AddCryptoForm: React.FC<AddCryptoFormProps> = ({ portfolioId, onAddSuccess
       return;
     }
     try {
-      await axios.post(`http://localhost:3001/api/portfolio/${portfolioId}/cryptos`, {
+      await axios.post(`${API_BASE_URL}/api/portfolio/${portfolioId}/cryptos`, {
         coinId,
         symbol,
         name,

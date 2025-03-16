@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
+const API_BASE_URL = 'production'=== 'production'
+  ? 'https://antique-icy-finch.glitch.me'
+  : 'http://localhost:3001';
+
 interface AddCoinTransactionFormProps {
   portfolioId: string;
   onSuccess: () => void;
@@ -39,10 +43,8 @@ const AddCoinTransactionForm: React.FC<AddCoinTransactionFormProps> = ({
     const oneDay = 24 * 60 * 60 * 1000; // 24 hours in ms
 
     if (cachedCoins && cachedTimestamp && Date.now() - Number(cachedTimestamp) < oneDay) {
-      // Use cached coin list if it exists and is less than 24 hours old.
       setAllCoins(JSON.parse(cachedCoins));
     } else {
-      // Otherwise, fetch the top 100 coins from CoinGecko.
       axios
         .get<CoinInfo[]>('https://api.coingecko.com/api/v3/coins/markets', {
           params: {
@@ -68,9 +70,9 @@ const AddCoinTransactionForm: React.FC<AddCoinTransactionFormProps> = ({
       // Determine the endpoint based on whether the portfolioId is a Mongo ObjectId or a custom userId.
       let endpoint = '';
       if (portfolioId.length === 24 && /^[0-9a-fA-F]{24}$/.test(portfolioId)) {
-        endpoint = `http://localhost:3001/api/portfolio/${portfolioId}/coins/${coinId}/transactions`;
+        endpoint = `${API_BASE_URL}/api/portfolio/${portfolioId}/coins/${coinId}/transactions`;
       } else {
-        endpoint = `http://localhost:3001/api/portfolio/byUserId/${portfolioId}/coins/${coinId}/transactions`;
+        endpoint = `${API_BASE_URL}/api/portfolio/byUserId/${portfolioId}/coins/${coinId}/transactions`;
       }
       await axios.post(endpoint, {
         date,
@@ -92,7 +94,6 @@ const AddCoinTransactionForm: React.FC<AddCoinTransactionFormProps> = ({
   return (
     <div
       style={{
-        // Full-screen overlay with flex centering.
         position: 'fixed',
         top: 0,
         left: 0,
@@ -118,7 +119,6 @@ const AddCoinTransactionForm: React.FC<AddCoinTransactionFormProps> = ({
       >
         <h3 style={{ textAlign: 'center' }}>Add Coin Transaction</h3>
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          {/* Coin select dropdown */}
           <label>
             Coin:
             <select

@@ -5,12 +5,15 @@ interface LoginViewProps {
   onLogin: (portfolioId: string) => void;
 }
 
+const API_BASE_URL = 'production' === 'production' 
+  ? 'https://antique-icy-finch.glitch.me' 
+  : 'http://localhost:3001';
+
 const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
   const [typedId, setTypedId] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
 
-  // Regex: letters/digits only, at least 3 characters
   const validIdRegex = /^[A-Za-z0-9]{3,}$/;
 
   const handleLoadOrCreate = async () => {
@@ -24,11 +27,10 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
     try {
       let portfolio;
       if (id.length === 24 && /^[0-9a-fA-F]{24}$/.test(id)) {
-        portfolio = await axios.get(`http://localhost:3001/api/portfolio/${id}`);
+        portfolio = await axios.get(`${API_BASE_URL}/api/portfolio/${id}`);
       } else {
-        portfolio = await axios.get(`http://localhost:3001/api/portfolio/byUserId/${id}`);
+        portfolio = await axios.get(`${API_BASE_URL}/api/portfolio/byUserId/${id}`);
       }
-      // If found, store in localStorage if "Remember Me" is checked
       if (rememberMe) {
         localStorage.setItem('portfolioId', id);
       } else {
@@ -37,9 +39,8 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
       onLogin(id);
     } catch (err: any) {
       if (err.response?.status === 404) {
-        // Not found: Create it
         try {
-          await axios.post('http://localhost:3001/api/portfolio/create', { userId: id });
+          await axios.post(`${API_BASE_URL}/api/portfolio/create`, { userId: id });
           if (rememberMe) {
             localStorage.setItem('portfolioId', id);
           }

@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+const API_BASE_URL = 'production' === 'production' 
+  ? 'https://antique-icy-finch.glitch.me' 
+  : 'http://localhost:3001';
+
 interface Transaction {
   _id?: string;
   date: string;
@@ -48,7 +52,7 @@ const CoinDrawer: React.FC<CoinDrawerProps> = ({
     }
     try {
       await axios.post(
-        `http://localhost:3001/api/portfolio/${portfolioId}/coins/${coin.coinId}/transactions`,
+        `${API_BASE_URL}/api/portfolio/${portfolioId}/coins/${coin.coinId}/transactions`,
         {
           date: newTx.date,
           type: newTx.type,
