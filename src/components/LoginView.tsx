@@ -5,7 +5,7 @@ interface LoginViewProps {
   onLogin: (portfolioId: string) => void;
 }
 
-const API_BASE_URL = 'production' === 'production' 
+const API_BASE_URL = 'production'  === 'production' 
   ? 'https://antique-icy-finch.glitch.me' 
   : 'http://localhost:3001';
 
@@ -13,14 +13,20 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
   const [typedId, setTypedId] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false); // Added loading state
 
   const validIdRegex = /^[A-Za-z0-9]{3,}$/;
 
   const handleLoadOrCreate = async () => {
+    if (loading) return; // Prevent multiple clicks
+
     setError('');
+    setLoading(true); // Start loading
     const id = typedId.trim();
+
     if (!validIdRegex.test(id)) {
       setError('Portfolio ID must be at least 3 letters/digits.');
+      setLoading(false);
       return;
     }
 
@@ -53,6 +59,8 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
         console.error('Error loading portfolio:', err);
         setError('Error loading portfolio.');
       }
+    } finally {
+      setLoading(false); // Stop loading after request completes
     }
   };
 
@@ -65,6 +73,7 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
         onChange={(e) => setTypedId(e.target.value)}
         placeholder="Type your ID"
         style={{ padding: '8px', fontSize: '16px' }}
+        disabled={loading} // Disable input when loading
       />
       <div style={{ margin: '10px' }}>
         <label>
@@ -72,12 +81,17 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
             type="checkbox"
             checked={rememberMe}
             onChange={(e) => setRememberMe(e.target.checked)}
+            disabled={loading} // Disable checkbox when loading
           />{' '}
           Remember Me
         </label>
       </div>
-      <button onClick={handleLoadOrCreate} style={{ padding: '8px 16px', fontSize: '16px' }}>
-        Login / Create
+      <button 
+        onClick={handleLoadOrCreate} 
+        style={{ padding: '8px 16px', fontSize: '16px' }} 
+        disabled={loading} // Disable button when loading
+      >
+        {loading ? 'Loading...' : 'Login / Create'}
       </button>
       {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
