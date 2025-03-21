@@ -1,54 +1,44 @@
-# React + TypeScript + Vite
+# CryptoPortfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+CryptoPortfolio is a web application for managing cryptocurrency investments. It lets you track your coins, add transactions (buy/sell), and view live market data. The live site is available at:  
+**[https://renanbazinin.github.io/CryptoPortfolio/](https://renanbazinin.github.io/CryptoPortfolio/)**
 
-Currently, two official plugins are available:
+## Table of Contents
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Installation](#installation)
+  - [Client (Frontend)](#client-frontend)
+  - [Server (Backend)](#server-backend)
+- [Usage](#usage)
+- [Deployment](#deployment)
+- [License](#license)
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Portfolio Management:** Create and manage your portfolio using a custom user ID.
+- **Transaction Logging:** Record buy/sell transactions for different cryptocurrencies.
+- **Live Price Updates:** Get current USD prices and 24h change for your coins (using the CoinGecko API).
+- **Responsive Design:** The interface adjusts for both desktop and mobile views.
+- **Data Persistence:** Portfolios are stored in MongoDB via Mongoose.
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## Technologies Used
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- **React** – A JavaScript library for building user interfaces.
+- **TypeScript** – Adds static type checking to improve code quality.
+- **Vite** – A fast build tool for modern web development.
+- **Express** – A minimal Node.js framework for building APIs.
+- **MongoDB & Mongoose** – NoSQL database and object data modeling for Node.js.
+- **Axios** – For making HTTP requests.
+- **GitHub Pages & Glitch** – For hosting the client and server respectively.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+
+**Clone the repository:**
+
+   ```bash
+   git clone https://github.com/renanbazinin/CryptoPortfolio.git
+   cd CryptoPortfolio/client
+  ```
+
+  
